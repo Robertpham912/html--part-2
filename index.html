@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>html- part 2 — Trạm Lập Trình (Beta)</title>
+  <meta name="description" content="Phiên bản beta — phần 2 của html-: popup update, dev mode, contact form, dark mode" />
+  <style>
+    :root{
+      --bg:#071021; --card:#0b1220; --muted:#9aa6b2; --accent:#4caf50; --glass: rgba(255,255,255,0.03);
+      --white:#e6eef6;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:var(--white);background:linear-gradient(180deg,#051322 0%, #071021 100%);-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    header{position:sticky; top:0; z-index:60; padding:10px 18px; display:flex; align-items:center; justify-content:space-between; background:rgba(2,6,23,0.3); backdrop-filter: blur(6px); border-bottom:1px solid rgba(255,255,255,0.03)}
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#6ee7b7,#3b82f6);display:flex;align-items:center;justify-content:center;color:#031; font-weight:800}
+    nav ul{list-style:none;margin:0;padding:0;display:flex;gap:8px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;padding:8px;border-radius:6px}
+    nav a:hover{color:var(--white);background:var(--glass)}
+    .main-cta{background:var(--accent); color:#072; padding:8px 12px;border-radius:8px;font-weight:700}
+    .container{max-width:1100px;margin:26px auto;padding:0 16px}
+
+    /* Hero */
+    .hero{display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .hero-left{flex:1;min-width:260px}
+    .hero h1{font-size:28px;margin:0 0 8px}
+    .hero p{color:var(--muted);margin:0 0 16px;line-height:1.5}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+
+    .hero-right{width:360px;max-width:40%;min-width:220px}
+
+    /* Grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px}
+    .feature{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02)}
+    .feature h3{margin:0 0 8px}
+    .muted{color:var(--muted);font-size:14px}
+
+    /* Popup update */
+    #updatePopup{display:none;position:fixed;left:50%;top:14%;transform:translateX(-50%);z-index:9999;width:92%;max-width:460px}
+    #updatePopup .inner{background:#fff;color:#012;padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    #updatePopup ul{margin:8px 0 12px;padding-left:18px;color:#064;font-weight:600}
+    .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.5);z-index:9998;display:none}
+
+    /* Contact form */
+    .contact{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px}
+    .contact .left{flex:1;min-width:260px}
+    .contact .right{width:320px;min-width:260px}
+
+    input, textarea, button {
+      font-family: inherit;
+      font-size:14px;
+    }
+    input, textarea {
+      width:100%; padding:10px; margin:6px 0; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02); color:var(--white);
+    }
+    textarea{min-height:100px; resize:vertical}
+    .btn {background:var(--accent); color:#062; padding:10px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700}
+
+    footer{margin:40px 0 60px; text-align:center; color:var(--muted); font-size:13px}
+
+    /* Dev console (small) */
+    #devConsole {position:fixed; right:12px; bottom:12px; width:320px; max-width:90%; background:rgba(0,0,0,0.6); padding:10px; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.5); color:var(--white); z-index:60}
+    #devConsole textarea {height:80px; background:rgba(255,255,255,0.02); color:var(--white)}
+    #devConsole .mini {font-size:12px;color:var(--muted); margin-bottom:6px}
+
+    /* Responsive */
+    @media (max-width:800px){
+      .hero{flex-direction:column}
+      .hero-right{max-width:100%; width:100%}
+      nav ul{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">hp</div>
+      <div>
+        <div style="font-weight:800">Trạm Lập Trình</div>
+        <div style="font-size:12px;color:var(--muted)">html- · part 2 (beta)</div>
+      </div>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="#features">Tính năng</a></li>
+        <li><a href="#projects">Project</a></li>
+        <li><a href="#contact">Góp ý</a></li>
+      </ul>
+    </nav>
+
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="main-cta" id="openUpdateBtn">🔔 Update</button>
+      <button id="loginBtn" class="card">🔑 Đăng nhập</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <h1>html- part 2 (Beta)</h1>
+        <p class="muted">Phiên bản tiếp theo của web — thử nghiệm tính năng, popup cập nhật, dev mode và form góp ý. Dành cho beta tester (cậu!).</p>
+        <div class="actions">
+          <button class="btn card" onclick="alert('Chơi Game: sắp có!')">🎮 Chơi Game</button>
+          <button class="card" onclick="openDev()">🛠 Dev Mode</button>
+        </div>
+        <div class="grid" id="features" style="margin-top:18px">
+          <div class="feature"><h3>Popup update</h3><div class="muted">Hiển thị thông báo khi có bản mới</div></div>
+          <div class="feature"><h3>Dev Mode</h3><div class="muted">Chạy lệnh admin như ;updatepopup</div></div>
+          <div class="feature"><h3>Contact Form</h3><div class="muted">Góp ý + client-side captcha</div></div>
+          <div class="feature"><h3>Responsive</h3><div class="muted">Hoạt động tốt trên iPad và desktop</div></div>
+        </div>
+      </div>
+
+      <div class="hero-right card">
+        <div style="font-weight:700">Trạng thái Beta</div>
+        <div class="muted" style="margin-top:6px">Phiên bản: <strong>html- part 2</strong> — Beta testing. Nếu có lỗi hãy góp ý qua form.</div>
+
+        <div style="margin-top:12px">
+          <div style="font-weight:700;margin-bottom:6px">Quick Links</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="#contact" class="card" style="padding:8px; text-align:center">📬 Góp ý</a>
+            <a class="card" style="padding:8px; text-align:center" onclick="runAdminCommand(';updatepopup <ul><li>✨ Beta: thêm tính năng A</li><li>🔧 Sửa lỗi B</li></ul>')">⚡ Demo DevCmd</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" style="margin-top:26px">
+      <h2 style="margin:0 0 8px">Project & Mini Game</h2>
+      <div class="muted">Một số project thử nghiệm đang chạy</div>
+
+      <div class="grid" style="margin-top:12px">
+        <div class="feature"><h3>Tower of Happy Mini</h3><div class="muted">Obby mini (beta)</div></div>
+        <div class="feature"><h3>Game Đua Xe 3D</h3><div class="muted">Three.js demo</div></div>
+        <div class="feature"><h3>DevTools</h3><div class="muted">Một số tiện ích lập trình</div></div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" style="margin-top:26px">
+      <h2>Góp ý</h2>
+      <div class="muted">Gửi góp ý để cải tiến bản beta</div>
+
+      <div class="contact">
+        <div class="left card">
+          <form id="feedbackForm">
+            <label>Tên</label>
+            <input id="fName" required placeholder="Tên (hoặc nickname)">
+
+            <label>Nội dung</label>
+            <textarea id="fMessage" required placeholder="Góp ý, lỗi, hoặc đề xuất..."></textarea>
+
+            <!-- Captcha đơn giản (ngẫu nhiên) -->
+            <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+              <div id="captchaQuestion" style="font-weight:700"></div>
+              <input id="captchaAnswer" placeholder="?" style="width:70px">
+            </div>
+
+            <div style="margin-top:10px">
+              <button class="btn" type="submit">Gửi góp ý</button>
+            </div>
+            <div id="formStatus" style="margin-top:8px;color:var(--muted)"></div>
+          </form>
+        </div>
+
+        <div class="right card">
+          <div style="font-weight:700">Hướng dẫn beta</div>
+          <div class="muted" style="margin-top:8px">Nếu cậu tìm thấy lỗi, hãy mô tả ngắn và gửi. Dev Mode có thể cập nhật popup bằng lệnh.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © Trạm Lập Trình — html- part 2 (beta) · <span id="year"></span>
+    </footer>
+  </main>
+
+  <!-- Popup + overlay -->
+  <div class="overlay" id="overlay" onclick="closeUpdatePopup()"></div>
+  <div id="updatePopup" aria-hidden="true">
+    <div class="inner">
+      <h3>🔔 Beta Update</h3>
+      <div id="popup-content">
+        <ul>
+          <li>✨ Bản beta: popup update + contact form</li>
+          <li>🛠 Dev Mode: ;updatepopup &lt;html&gt;</li>
+        </ul>
+      </div>
+      <div style="text-align:right">
+        <button class="btn" onclick="closeUpdatePopup()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dev Console nhỏ -->
+  <div id="devConsole" style="display:none">
+    <div class="mini">Dev Mode — gõ lệnh ở dưới, ví dụ: <code>;updatepopup &lt;ul&gt;&lt;li&gt;Nội dung&lt;/li&gt;&lt;/ul&gt;</code></div>
+    <textarea id="devInput" placeholder="Nhập lệnh..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="btn" onclick="execDev()">Chạy</button>
+      <button style="padding:8px;border-radius:8px;background:#444;color:#fff" onclick="closeDev()">Đóng</button>
+    </div>
+    <div id="devOutput" style="margin-top:8px;color:var(--muted);font-size:13px"></div>
+  </div>
+
+<script>
+  // Khởi tạo
+  document.getElementById('year').innerText = new Date().getFullYear();
+
+  // Popup logic: hiện 1 lần mỗi ngày
+  function showUpdatePopup(force=false) {
+    const last = localStorage.getItem('lastPopupShown');
+    const today = new Date().toDateString();
+    if (force || last !== today) {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('updatePopup').style.display = 'block';
+      localStorage.setItem('lastPopupShown', today);
+    }
+  }
+  function closeUpdatePopup() {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('updatePopup').style.display = 'none';
+  }
+  document.getElementById('openUpdateBtn').addEventListener('click', ()=> showUpdatePopup(true));
+  window.addEventListener('load', ()=> showUpdatePopup(false));
+
+  // Contact form & simple captcha (random mỗi lần load)
+  function newCaptcha() {
+    const a = Math.floor(Math.random()*8)+1;
+    const b = Math.floor(Math.random()*8)+1;
+    window._captchaAnswer = a + b;
+    document.getElementById('captchaQuestion').innerText = `${a} + ${b} =`;
+  }
+  newCaptcha();
+
+  document.getElementById('feedbackForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('fName').value.trim();
+    const msg = document.getElementById('fMessage').value.trim();
+    const ans = Number(document.getElementById('captchaAnswer').value);
+    const status = document.getElementById('formStatus');
+
+    if (!name || !msg) {
+      status.style.color = 'orange';
+      status.innerText = 'Vui lòng điền đầy đủ thông tin.';
+      return;
+    }
+    if (ans !== window._captchaAnswer) {
+      status.style.color = 'red';
+      status.innerText = 'Sai câu hỏi bảo mật — thử lại.';
+      newCaptcha();
+      return;
+    }
+
+    // LƯU TRONG localStorage (do không có server). Cậu có thể đổi thành gửi tới server khi có.
+    const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+    feedbacks.push({name, msg, at: new Date().toISOString()});
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+    status.style.color = 'lightgreen';
+    status.innerText = 'Cảm ơn! Góp ý đã được lưu (localStorage).';
+    document.getElementById('feedbackForm').reset();
+    newCaptcha();
+  });
+
+  // Simple login (localStorage)
+  function updateLoginButton() {
+    const btn = document.getElementById('loginBtn');
+    const user = localStorage.getItem('loggedInUser');
+    if (user) {
+      btn.innerText = `👋 ${user} · Đăng xuất`;
+      btn.onclick = () => { localStorage.removeItem('loggedInUser'); updateLoginButton(); };
+    } else {
+      btn.innerText = '🔑 Đăng nhập';
+      btn.onclick = () => {
+        const name = prompt('Nhập tên (nickname):');
+        if (name) {
+          localStorage.setItem('loggedInUser', name);
+          updateLoginButton();
+        }
+      };
+    }
+  }
+  updateLoginButton();
+
+  // Dev Mode UI
+  function openDev() { document.getElementById('devConsole').style.display = 'block'; document.getElementById('devInput').focus(); }
+  function closeDev() { document.getElementById('devConsole').style.display = 'none'; }
+
+  // Lệnh admin: ;updatepopup <html>
+  function runAdminCommand(cmd) {
+    // nếu gọi trực tiếp từ page
+    execCommand(cmd);
+  }
+
+  function execDev() {
+    const cmd = document.getElementById('devInput').value.trim();
+    execCommand(cmd);
+  }
+
+  function execCommand(cmd) {
+    const out = document.getElementById('devOutput');
+    if (!cmd) { out.innerText = 'Không có lệnh.'; return; }
+
+    if (cmd.startsWith(';updatepopup ')) {
+      const payload = cmd.replace(';updatepopup ', '');
+      document.getElementById('popup-content').innerHTML = payload;
+      localStorage.setItem('popupUpdateContent', payload);
+      out.innerText = '✅ Popup đã cập nhật.';
+      // hiện thử
+      showUpdatePopup(true);
+      return;
+    }
+    if (cmd === ';showfeedbacks') {
+      const f = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+      out.innerText = 'Saved feedbacks: ' + JSON.stringify(f, null, 2);
+      return;
+    }
+    out.innerText = 'Lệnh không nhận diện.';
+  }
+
+  // Load popup content từ localStorage (nếu admin đã chỉnh trước)
+  (function loadPopupSave() {
+    const c = localStorage.getItem('popupUpdateContent');
+    if (c) document.getElementById('popup-content').innerHTML = c;
+  })();
+
+  // Shortcut: Ctrl+` mở Dev Console
+  window.addEventListener('keydown', function(e){
+    if (e.ctrlKey && e.key === '`') {
+      const el = document.getElementById('devConsole');
+      el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+      if (el.style.display === 'block') document.getElementById('devInput').focus();
+    }
+  });
+
+</script>
+</body>
+</html>
