@@ -1,153 +1,78 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Đăng nhập | Web của cậu</title>
-<style>
-:root {
-  --light-bg: #f2f4f8;
-  --light-text: #1a1a1a;
-  --dark-bg: #0f172a;
-  --dark-text: #f8fafc;
-  --accent: #3b82f6;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-
-body {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.4s, color 0.4s;
-}
-
-.container {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(16px);
-  border-radius: 16px;
-  padding: 32px;
-  width: 360px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-h2 {
-  text-align: center;
-  margin-bottom: 24px;
-  font-size: 24px;
-}
-
-input {
-  width: 100%;
-  padding: 10px 14px;
-  margin-bottom: 14px;
-  border: none;
-  border-radius: 8px;
-  outline: none;
-}
-
-button {
-  width: 100%;
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s;
-}
-button:hover { background: #2563eb; }
-
-.toggle {
-  text-align: center;
-  margin-top: 12px;
-  font-size: 14px;
-  cursor: pointer;
-  color: var(--accent);
-}
-
-small {
-  display: block;
-  text-align: center;
-  margin-top: 12px;
-  opacity: 0.8;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập | Web Beta</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #141e30, #243b55);
+      color: white;
+      font-family: "Poppins", sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .login-box {
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #00c3ff;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #009ad9;
+    }
+    small {
+      opacity: 0.7;
+      font-size: 12px;
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="title">Đăng nhập</h2>
-    <form id="loginForm">
-      <input type="text" id="username" placeholder="Tên người dùng" required>
-      <input type="password" id="password" placeholder="Mật khẩu" required>
-      <button type="submit">Đăng nhập</button>
-    </form>
-
-    <form id="registerForm" style="display:none;">
-      <input type="text" id="newUsername" placeholder="Tên người dùng mới" required>
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="newPassword" placeholder="Mật khẩu" required>
-      <button type="submit">Đăng ký</button>
-    </form>
-
-    <div class="toggle" id="toggleForm">Chưa có tài khoản? Đăng ký ngay</div>
-    <small>Web beta - góp ý cho tớ nhé 💙</small>
+  <div class="login-box">
+    <h2>Đăng nhập</h2>
+    <input type="text" id="username" placeholder="Tên người dùng"><br>
+    <input type="password" id="password" placeholder="Mật khẩu"><br>
+    <button id="loginBtn">Đăng nhập</button>
+    <small>Đây là web beta, nếu có vấn đề gì xin hãy góp ý cho tớ nhé 💗</small>
   </div>
 
-<script>
-// 🌗 Giao diện tự đổi sáng / tối
-function autoTheme() {
-  const hour = new Date().getHours();
-  const isDark = hour >= 18 || hour < 6;
-  document.body.style.background = isDark ? "var(--dark-bg)" : "var(--light-bg)";
-  document.body.style.color = isDark ? "var(--dark-text)" : "var(--light-text)";
-}
-autoTheme();
-setInterval(autoTheme, 60000);
+  <script>
+    document.getElementById("loginBtn").addEventListener("click", function() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
 
-// 🔁 Chuyển giữa login / register
-const toggle = document.getElementById('toggleForm');
-const loginForm = document.getElementById('loginForm');
-const registerForm = document.getElementById('registerForm');
-const title = document.getElementById('title');
-
-toggle.addEventListener('click', () => {
-  const isLogin = loginForm.style.display !== 'none';
-  loginForm.style.display = isLogin ? 'none' : 'block';
-  registerForm.style.display = isLogin ? 'block' : 'none';
-  toggle.textContent = isLogin ? 'Đã có tài khoản? Đăng nhập ngay' : 'Chưa có tài khoản? Đăng ký ngay';
-  title.textContent = isLogin ? 'Đăng ký' : 'Đăng nhập';
-});
-
-// 💾 Lưu tài khoản vào localStorage
-registerForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const user = {
-    username: document.getElementById('newUsername').value,
-    email: document.getElementById('email').value,
-    password: document.getElementById('newPassword').value
-  };
-  localStorage.setItem('user', JSON.stringify(user));
-  alert('Đăng ký thành công! Bây giờ bạn có thể đăng nhập.');
-  toggle.click();
-});
-
-// 🔐 Đăng nhập
-loginForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const user = JSON.parse(localStorage.getItem('user'));
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-
-  if (user && username === user.username && password === user.password) {
-    alert('Đăng nhập thành công! Đang chuyển đến trang chính...');
-window.location.href = "index.html";// 👉 chuyển tới trang chính
-  } else {
-    alert('Sai tên người dùng hoặc mật khẩu!');
-  }
-});
-</script>
+      // Kiểm tra đăng nhập đơn giản
+      if (user === "admin" && pass === "123") {
+        alert("Đăng nhập thành công!");
+        window.location.href = "https://robertpham912.github.io/html--part-2/index.html";
+      } else {
+        alert("Sai tên hoặc mật khẩu!");
+      }
+    });
+  </script>
 </body>
 </html>
