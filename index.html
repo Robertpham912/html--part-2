@@ -150,6 +150,20 @@ loginForm.addEventListener('submit', (e) => {
     alert('Sai tên người dùng hoặc mật khẩu!');
   }
 });
+  <script>
+// Nếu chưa đăng nhập thì quay lại login.html
+const user = JSON.parse(localStorage.getItem('user'));
+if (!user) {
+  window.location.href = "login.html";
+}
+
+// Hàm đăng xuất (tùy cậu muốn đặt nút ở đâu)
+function logout() {
+  localStorage.removeItem('user');
+  window.location.href = "login.html";
+}
+</script>
+  <button onclick="logout()">Đăng xuất</button>
 </script>
 </body>
 </html>
