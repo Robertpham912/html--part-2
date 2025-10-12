@@ -99,6 +99,40 @@ window.addEventListener("error", (e) => {
   document.body.appendChild(box);
 });
 console.log("Script loaded, location:", window.location.href);
+  <script>
+// Hàm hiển thị log ngay trên trang
+function showLog(message) {
+  const box = document.getElementById("logBox") || (() => {
+    const b = document.createElement("div");
+    b.id = "logBox";
+    b.style.position = "fixed";
+    b.style.bottom = "10px";
+    b.style.left = "10px";
+    b.style.background = "rgba(0,0,0,0.75)";
+    b.style.color = "#0f0";
+    b.style.padding = "10px";
+    b.style.borderRadius = "6px";
+    b.style.fontFamily = "monospace";
+    b.style.fontSize = "12px";
+    b.style.maxWidth = "90%";
+    b.style.zIndex = "9999";
+    document.body.appendChild(b);
+    return b;
+  })();
+  box.innerHTML += message + "<br>";
+  console.log(message);
+}
+
+// Thay console.log = showLog
+console.log = showLog;
+
+// Log thử để xem hoạt động
+console.log("✅ Console hiển thị trực tiếp trên web!");
+
+window.addEventListener("error", (e) => {
+  showLog("❌ Lỗi: " + e.message);
+});
+</script>
 </script>
 </script>
 </body>
