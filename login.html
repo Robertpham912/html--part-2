@@ -83,55 +83,43 @@ act.addEventListener('click', async ()=> {
   }
 });
 <script>
-window.addEventListener("error", (e) => {
-  const box = document.createElement("div");
-  box.style.position = "fixed";
-  box.style.bottom = "10px";
-  box.style.left = "10px";
-  box.style.background = "rgba(0,0,0,0.8)";
-  box.style.color = "white";
-  box.style.padding = "10px";
-  box.style.borderRadius = "6px";
-  box.style.fontSize = "12px";
-  box.style.maxWidth = "300px";
-  box.style.zIndex = "9999";
-  box.innerText = "Lỗi: " + e.message;
-  document.body.appendChild(box);
-});
-console.log("Script loaded, location:", window.location.href);
-  <script>
-// Hàm hiển thị log ngay trên trang
-function showLog(message) {
-  const box = document.getElementById("logBox") || (() => {
-    const b = document.createElement("div");
-    b.id = "logBox";
-    b.style.position = "fixed";
-    b.style.bottom = "10px";
-    b.style.left = "10px";
-    b.style.background = "rgba(0,0,0,0.75)";
-    b.style.color = "#0f0";
-    b.style.padding = "10px";
-    b.style.borderRadius = "6px";
-    b.style.fontFamily = "monospace";
-    b.style.fontSize = "12px";
-    b.style.maxWidth = "90%";
-    b.style.zIndex = "9999";
-    document.body.appendChild(b);
-    return b;
-  })();
-  box.innerHTML += message + "<br>";
-  console.log(message);
-}
+(function() {
+  // Tạo khung hiển thị log
+  const debugBox = document.createElement("div");
+  debugBox.id = "debugBox";
+  debugBox.style.position = "fixed";
+  debugBox.style.bottom = "0";
+  debugBox.style.left = "0";
+  debugBox.style.width = "100%";
+  debugBox.style.maxHeight = "40vh";
+  debugBox.style.overflowY = "auto";
+  debugBox.style.background = "rgba(0,0,0,0.85)";
+  debugBox.style.color = "#0f0";
+  debugBox.style.fontFamily = "monospace";
+  debugBox.style.fontSize = "12px";
+  debugBox.style.padding = "10px";
+  debugBox.style.zIndex = "99999";
+  debugBox.innerHTML = "<b>📋 Debug console:</b><br>";
+  document.body.appendChild(debugBox);
 
-// Thay console.log = showLog
-console.log = showLog;
+  function log(msg) {
+    debugBox.innerHTML += msg + "<br>";
+  }
 
-// Log thử để xem hoạt động
-console.log("✅ Console hiển thị trực tiếp trên web!");
+  // Ghi đè console.log
+  console.log = function(msg) {
+    log("LOG: " + msg);
+  };
 
-window.addEventListener("error", (e) => {
-  showLog("❌ Lỗi: " + e.message);
-});
+  // Ghi lỗi JS
+  window.addEventListener("error", (e) => {
+    log("❌ ERROR: " + e.message + " at " + e.filename + ":" + e.lineno);
+  });
+
+  // Log sự kiện khi người dùng bấm nút
+  log("✅ Debug console đã sẵn sàng!");
+})();
+</script>
 </script>
 </script>
 </script>
