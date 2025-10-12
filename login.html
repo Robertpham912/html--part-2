@@ -68,7 +68,8 @@
       // Kiểm tra đăng nhập đơn giản
       if (user === "admin" && pass === "123") {
         alert("Đăng nhập thành công!");
-        window.location.href = "https://robertpham912.github.io/html--part-2/index.html";
+        window.location.replace("https://robertpham912.github.io/html--part-2/index.html");
+window.location.reload();
       } else {
         alert("Sai tên hoặc mật khẩu!");
       }
