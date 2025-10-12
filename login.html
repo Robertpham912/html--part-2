@@ -82,7 +82,24 @@ act.addEventListener('click', async ()=> {
     dbg('Registered new user: '+u);
   }
 });
-
+<script>
+window.addEventListener("error", (e) => {
+  const box = document.createElement("div");
+  box.style.position = "fixed";
+  box.style.bottom = "10px";
+  box.style.left = "10px";
+  box.style.background = "rgba(0,0,0,0.8)";
+  box.style.color = "white";
+  box.style.padding = "10px";
+  box.style.borderRadius = "6px";
+  box.style.fontSize = "12px";
+  box.style.maxWidth = "300px";
+  box.style.zIndex = "9999";
+  box.innerText = "Lỗi: " + e.message;
+  document.body.appendChild(box);
+});
+console.log("Script loaded, location:", window.location.href);
+</script>
 </script>
 </body>
 </html>
