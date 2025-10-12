@@ -66,10 +66,10 @@
       isLogin = !isLogin;
       title.textContent = isLogin ? 'Đăng nhập' : 'Đăng ký';
       actionBtn.textContent = isLogin ? 'Đăng nhập' : 'Đăng ký';
-      toggleText.innerHTML = isLogin
-        ? 'Chưa có tài khoản? <a href="#" id="toggleLink">Đăng ký</a>'
-        : 'Đã có tài khoản? <a href="#" id="toggleLink">Đăng nhập</a>';
-    });
+      toggleText.querySelector("a").textContent = isLogin ? "Đăng ký" : "Đăng nhập";
+toggleText.firstChild.textContent = isLogin
+  ? "Chưa có tài khoản? "
+  : "Đã có tài khoản? ";
 
     actionBtn.addEventListener('click', () => {
       const username = document.getElementById('username').value.trim();
