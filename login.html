@@ -1,109 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đăng nhập / Đăng ký</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      width: 320px;
-      text-align: center;
-    }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      width: 95%;
-      padding: 10px;
-      background: #007bff;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover { background: #0056b3; }
-    p { font-size: 14px; }
-    a { color: #007bff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Login (debug)</title>
+<style>
+  body{font-family:Segoe UI,Arial;margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#f0f4f8}
+  .box{background:#fff;padding:20px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.08);width:320px}
+  input{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:8px}
+  button{width:100%;padding:10px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer}
+  pre#dbg{height:120px;overflow:auto;background:#0b1220;color:#dff; padding:8px;border-radius:6px;font-size:12px}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="title">Đăng nhập</h2>
-    <input type="text" id="username" placeholder="Tên người dùng">
-    <input type="password" id="password" placeholder="Mật khẩu">
-    <button id="actionBtn">Đăng nhập</button>
-    <p id="toggleText">Chưa có tài khoản? <a href="#" id="toggleLink">Đăng ký</a></p>
+  <div class="box">
+    <h3 id="title">Đăng nhập (debug)</h3>
+    <input id="username" placeholder="username"/>
+    <input id="password" type="password" placeholder="password"/>
+    <button id="act">Đăng nhập/Đăng ký</button>
+    <p style="font-size:12px;color:#666;margin-top:8px">(Ghi chú: login sẽ lưu vào localStorage keys: users, user)</p>
+    <pre id="dbg">Console debug output...</pre>
   </div>
 
-  <script>
-    let isLogin = true;
+<script>
+const dbg = msg => {
+  console.log(msg);
+  const p = document.getElementById('dbg');
+  p.textContent = msg + "\n" + p.textContent;
+}
 
-    const title = document.getElementById('title');
-    const actionBtn = document.getElementById('actionBtn');
-    const toggleText = document.getElementById('toggleText');
-    const toggleLink = document.getElementById('toggleLink');
+dbg('Script loaded, location: ' + window.location.href);
+dbg('origin: ' + window.location.origin + ' , pathname: ' + window.location.pathname);
 
-    toggleLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      isLogin = !isLogin;
-      title.textContent = isLogin ? 'Đăng nhập' : 'Đăng ký';
-      actionBtn.textContent = isLogin ? 'Đăng nhập' : 'Đăng ký';
-      toggleText.querySelector("a").textContent = isLogin ? "Đăng ký" : "Đăng nhập";
-toggleText.firstChild.textContent = isLogin
-  ? "Chưa có tài khoản? "
-  : "Đã có tài khoản? ";
+const act = document.getElementById('act');
+act.addEventListener('click', async ()=> {
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value.trim();
+  if(!u || !p) return alert('Nhập đủ thông tin');
 
-    actionBtn.addEventListener('click', () => {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
+  // read users
+  let users = JSON.parse(localStorage.getItem('users') || '[]');
+  let found = users.find(x=>x.username===u && x.password===p);
 
-      if (username === "" || password === "") {
-        alert("Vui lòng nhập đầy đủ thông tin!");
-        return;
-      }
+  if(found) {
+    localStorage.setItem('user', JSON.stringify(found));
+    dbg('Đăng nhập OK, user saved to localStorage.user');
+    // try several redirect methods, log each
+    try {
+      dbg('Attempting window.location.href = "index.html"');
+      window.location.href = 'index.html';
+      // if browser doesn't navigate immediately we still try assign/open after small delay
+      await new Promise(r=>setTimeout(r,600));
+    } catch(e){ dbg('href error: '+e) }
 
-      const users = JSON.parse(localStorage.getItem('users')) || [];
+    try {
+      dbg('Attempting window.location.assign(...)');
+      window.location.assign(window.location.origin + window.location.pathname.replace(/\/login\.html$/,'/index.html'));
+      await new Promise(r=>setTimeout(r,600));
+    } catch(e){ dbg('assign error: '+e) }
 
-      if (isLogin) {
-        const user = users.find(u => u.username === username && u.password === password);
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          alert("Đăng nhập thành công!");
-          window.location.href = "index.html";
-        } else {
-          alert("Sai tên đăng nhập hoặc mật khẩu!");
-        }
-      } else {
-        if (users.some(u => u.username === username)) {
-          alert("Tên người dùng đã tồn tại!");
-          return;
-        }
-        users.push({ username, password });
-        localStorage.setItem('users', JSON.stringify(users));
-        alert("Đăng ký thành công! Hãy đăng nhập nhé.");
-        isLogin = true;
-        title.textContent = "Đăng nhập";
-        actionBtn.textContent = "Đăng nhập";
-      }
-    });
-  </script>
+    try {
+      dbg('Attempting window.open("index.html","_self")');
+      window.open('index.html','_self');
+      await new Promise(r=>setTimeout(r,600));
+    } catch(e){ dbg('open error: '+e) }
+
+    // final absolute fallback
+    const abs = window.location.origin + (window.location.pathname.includes('/') ? window.location.pathname.replace(/login\.html$/,'index.html') : '/index.html');
+    dbg('Final fallback to absolute: ' + abs);
+    window.location.replace(abs);
+  } else {
+    // register quick if username not exists
+    if(users.some(x=>x.username===u)) {
+      alert('Sai tên hoặc mật khẩu.');
+      dbg('Login failed: wrong password');
+      return;
+    }
+    users.push({username:u,password:p});
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Đăng ký thành công, giờ nhấn đăng nhập với cùng thông tin.');
+    dbg('Registered new user: '+u);
+  }
+});
+
+</script>
 </body>
 </html>
